@@ -5,41 +5,33 @@ const router = new express.Router();
 const bcrypt = require('bcryptjs');
 
 //routes
-//get all users
-router.get('/', async(req, res) => {
-    const users = await User.find().select("-passwordHash");
-    if(!users) {
-        res.status(400).send("Users not found!")
-    }
-    res.send(users);
+
+//route to get a user by ID
+router.get('/users/:userId', (req, res, next) => {
+    const { userId } = req.params;
+    User.findById(userId)
+        .then(user => {
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+        } else {
+            res.json(user);
+        }
+    }).catch(next);
 });
 
-//get user by id
-router.get('/:id', async(req, res) => {
-    const user = await User.findById(req.params.id).select("-passwordHash");
-    if(!user) {
-        res.status(400).send("User not found!")
-    }
-    res.send(user);
-})
-
-//add user
-router.post('/', async (req, res) => {
-    let user = new User({
-        email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.passwordHash),
-        isAdmin: false,
-        isMasterChef: false
-    })
-
-    user = await user.save();
-
-    if(!user) {
-        return res.status(400).send("User not created!");
-    }
-
-    res.send(user);
-})
+//route to register a new user
+router.post('/register', (req, res, next) => {
+    const { googleId, name, email } = req.body;
+    const user = new User({
+        googleId,
+        name,
+        email
+    });
+    user.save()
+        .then(user => {
+        res.json(user);
+    }).catch(next);
+});
 
 //export
 module.exports = router;

@@ -16,12 +16,18 @@ cloudinary.config({
 //routes
 //get all recipes
 router.get('/', async(req, res) => {
-    const recipes = await Recipe.find();
-    if(!recipes){
+    const diet = req.query.diet;
+    let recipes;
+    if(diet) {
+        recipes = await Recipe.find({diet: diet});
+    } else {
+        recipes = await Recipe.find();
+    }
+    if(recipes.length === 0){
         res.status(400).send("Recipes not found!")
     }
     res.send(recipes);
-})
+});
 
 //get recipe by id
 router.get('/:id', async(req, res) => {

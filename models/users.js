@@ -3,21 +3,13 @@ const mongoose = require('mongoose');
 
 //schemas
 const userSchema = mongoose.Schema({
-    email: {
+    googleId: String,
+    name: String,
+    email: String,
+    role: {
         type: String,
-        required: true
-    },
-    passwordHash: {
-        type: String,
-        required: true
-    },
-    isAdmin: {
-        type: Boolean,
-        required: true
-    },
-    isMasterChef: {
-        type: Boolean,
-        required: true
+        enum: ['user', 'admin'],
+        default: 'user'
     }
 });
 

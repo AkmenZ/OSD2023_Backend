@@ -2,7 +2,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
 const app = express();
 const cors = require('cors');
 
@@ -16,11 +15,18 @@ app.use(express.json());
 app.use(cors());
 app.options('*', cors());
 
+var corsOptions = {
+    origin: 'http://localhost:4200',
+    optionsSuccessStatus: 200
+}
+
 const recipeRouter = require('./routes/recipeRoutes');
-app.use(url + '/recipes', recipeRouter);
+app.use(url + '/recipes', cors(), recipeRouter)
+app.use(cors(corsOptions));
 
 const userRouter = require('./routes/userRoutes');
-app.use(url + '/users', userRouter);
+app.use(url + '/users', cors(), userRouter)
+app.use(cors(corsOptions));
 
 
 //connect to mongodb atlas
