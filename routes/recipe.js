@@ -16,6 +16,7 @@ cloudinary.config({
 //routes
 //get all recipes
 router.get('/', async(req, res) => {
+    try {
     const diet = req.query.diet;
     let recipes;
     if(diet) {
@@ -27,6 +28,10 @@ router.get('/', async(req, res) => {
         res.status(400).send("Recipes not found!")
     }
     res.send(recipes);
+    } catch {
+        console.error(err);
+        res.status(500).send("Internal server error");
+    }
 });
 
 //get recipe by id
@@ -50,7 +55,11 @@ router.get('/:id', async(req, res) => {
 router.post('/', upload.single('image'), async(req, res) => {
 
     if (!req.file) {
-        return res.status(400).send({ error: error.message });
+        return res.status(400).send({ error: {
+            message: 'File not uploaded!',
+            field: 'image'
+        }
+        });
     }
 
     try {
@@ -61,14 +70,16 @@ router.post('/', upload.single('image'), async(req, res) => {
 
     let recipe = new Recipe({
         title: req.body.title,
+        authorId: req.body.authorId,
+        authorName: req.body.authorName,
         image: imageUrl,
         imageId: imageId,
         diet: req.body.diet,
         ingredients: req.body.ingredients,
         instructions: req.body.instructions,
         cookTime: req.body.cookTime,
-        likes: req.body.likes,
-        rating: req.body.rating
+        likes: 0,
+        rating: 0
     });
 
     recipe = await recipe.save()
