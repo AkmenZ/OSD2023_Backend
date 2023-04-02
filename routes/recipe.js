@@ -18,17 +18,22 @@ cloudinary.config({
 router.get('/', async(req, res) => {
     try {
     const diet = req.query.diet;
+    const flagged = req.query.isFlagged;
     let recipes;
     if(diet) {
+        //get recipes by diet type for filtering
         recipes = await Recipe.find({diet: diet});
+    } else if(flagged) {
+        //get recipes that are flagged for admin
+        recipes = await Recipe.find({isFlagged: flagged});
     } else {
         recipes = await Recipe.find();
     }
     if(recipes.length === 0){
-        res.status(400).send("Recipes not found!")
+        return res.status(400).send("Recipes not found!")
     }
     res.send(recipes);
-    } catch {
+    } catch (err) {
         console.error(err);
         res.status(500).send("Internal server error");
     }
@@ -83,17 +88,10 @@ router.post('/', upload.single('image'), async(req, res) => {
         isFlagged: false
     });
 
-    recipe = await recipe.save()
-    .then(() => {
-        console.log(imageUrl);
-        res.status(201).send("Recipe added successfully!")
-    })
-    .catch((error) => {
-        res.status(500).json({
-            error:error,
-            message:"Failed to add recipe!"
-        })
-    });
+    recipe = await recipe.save();
+    console.log(imageUrl);
+    res.status(201).send("Recipe added successfully!");
+
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -107,7 +105,8 @@ router.put('/:id', async(req, res) => {
         diet: req.body.diet,
         ingredients: req.body.ingredients,
         instructions: req.body.instructions,
-        cookTime: req.body.cookTime
+        cookTime: req.body.cookTime,
+        isFlagged: req.body.isFlagged
     },{new: true});
     if(!recipe) {
         return res.status(400).send("Invalid recipe id!");
