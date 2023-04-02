@@ -79,7 +79,8 @@ router.post('/', upload.single('image'), async(req, res) => {
         instructions: req.body.instructions,
         cookTime: req.body.cookTime,
         likes: 0,
-        rating: 0
+        rating: 0,
+        isFlagged: false
     });
 
     recipe = await recipe.save()

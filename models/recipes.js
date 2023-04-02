@@ -24,7 +24,8 @@ const recipesSchema = new mongoose.Schema({
     instructions: String,
     cookTime: String,
     likes: Number,
-    dislikes: Number
+    dislikes: Number,
+    isFlagged: Boolean
 })
 
 //exports
