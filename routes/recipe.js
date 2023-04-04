@@ -19,6 +19,8 @@ router.get('/', async(req, res) => {
     try {
     const diet = req.query.diet;
     const flagged = req.query.isFlagged;
+    const author = req.query.authorId;
+
     let recipes;
     if(diet) {
         //get recipes by diet type for filtering
@@ -26,6 +28,9 @@ router.get('/', async(req, res) => {
     } else if(flagged) {
         //get recipes that are flagged for admin
         recipes = await Recipe.find({isFlagged: flagged});
+    } else if(author) {
+        //get recipes for author
+        recipes = await Recipe.find({authorId: author});
     } else {
         recipes = await Recipe.find();
     }
@@ -56,6 +61,24 @@ router.get('/:id', async(req, res) => {
     }
 });
 
+//get liked recipes
+router.get('/likedby/:id', async(req, res) => {
+    try {
+        const recipes = await Recipe.find({ "likedBy.likeAuthorId": req.params.id });
+        
+        if(recipes.length === 0) {
+            return res.status(404).send("This user has no favorites!");
+        }
+        res.send(recipes);
+    } catch (error) {
+        return res.status(500).json({
+            error: error,
+            message: "Error during recipe retrieval!"
+        });
+    }
+});
+
+
 //add a new recipe
 router.post('/', upload.single('image'), async(req, res) => {
 
@@ -84,6 +107,7 @@ router.post('/', upload.single('image'), async(req, res) => {
         instructions: req.body.instructions,
         cookTime: req.body.cookTime,
         likes: 0,
+        likedBy: [],
         rating: 0,
         isFlagged: false
     });
@@ -106,7 +130,9 @@ router.put('/:id', async(req, res) => {
         ingredients: req.body.ingredients,
         instructions: req.body.instructions,
         cookTime: req.body.cookTime,
-        isFlagged: req.body.isFlagged
+        isFlagged: req.body.isFlagged,
+        likedBy: req.body.likedBy,
+        likes: req.body.likes
     },{new: true});
     if(!recipe) {
         return res.status(400).send("Invalid recipe id!");

@@ -7,6 +7,16 @@ const ingredientSchema = new mongoose.Schema({
     amount: String
 })
 
+const likeSchema = new mongoose.Schema({
+    likeAuthorId: String
+})
+
+const commentSchema = new mongoose.Schema({
+    commentAuthorId: String,
+    commentAuthorName: String,
+    commentContent: String
+})
+
 const recipesSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -25,6 +35,11 @@ const recipesSchema = new mongoose.Schema({
     cookTime: String,
     likes: Number,
     dislikes: Number,
+    likedBy: {
+        type: [likeSchema],
+        default: []
+    },
+    comments: [commentSchema],
     isFlagged: Boolean
 })
 
