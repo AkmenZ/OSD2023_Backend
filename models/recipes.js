@@ -1,5 +1,6 @@
 //imports
 const mongoose = require('mongoose');
+//const Comment = require('./comments');
 
 //schemas
 const ingredientSchema = new mongoose.Schema({
@@ -9,12 +10,6 @@ const ingredientSchema = new mongoose.Schema({
 
 const likeSchema = new mongoose.Schema({
     likeAuthorId: String
-})
-
-const commentSchema = new mongoose.Schema({
-    commentAuthorId: String,
-    commentAuthorName: String,
-    commentContent: String
 })
 
 const recipesSchema = new mongoose.Schema({
@@ -39,7 +34,10 @@ const recipesSchema = new mongoose.Schema({
         type: [likeSchema],
         default: []
     },
-    comments: [commentSchema],
+    // comments: {
+    //     type: [Comment],
+    //     default: []
+    // },
     isFlagged: Boolean
 })
 

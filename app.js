@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 
+// Set the strictQuery option to false
+mongoose.set('strictQuery', false);
+
 // const dotenv = require('dotenv');
 // const Auth0Strategy = require('passport-auth0');
 // const userRouter = require('./routes/user');
@@ -36,12 +39,12 @@ var corsOptions = {
 }
 
 const recipeRouter = require('./routes/recipe');
-app.use(url + '/recipes', cors(), recipeRouter)
-app.use(cors(corsOptions));
+app.use(url + '/recipes', cors(), recipeRouter);
 
-// const userRouter = require('./routes/user');
-// app.use(url + '/users', cors(), userRouter)
-// app.use(cors(corsOptions));
+const commentRouter = require('./routes/comments');
+app.use(url + '/comments', cors(), commentRouter);
+
+app.use(cors(corsOptions));
 
 //connect to mongodb atlas
 mongoose.connect(process.env.CONNECTION_STRING, {
