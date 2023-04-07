@@ -11,6 +11,7 @@ mongoose.set('strictQuery', false);
 //enviroment variables
 require('dotenv/config');
 const url = process.env.URL;
+const PORT = process.env.PORT;
 
 //middlewares
 app.use(morgan('tiny'));
@@ -46,6 +47,6 @@ app.get('/', (req, res) => {
     res.send('Welcome To MasterChef');
 });
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000!")
+app.listen(PORT, () => {
+    console.log("Server is running on port: " + PORT);
 });
