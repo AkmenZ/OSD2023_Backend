@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
     } else {
       recipes = await Recipe.find();
     }
+    recipes.sort((a, b) => b.likes - a.likes);
     if (recipes.length === 0) {
       return res.status(400).send("Recipes not found!");
     }

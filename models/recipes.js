@@ -1,6 +1,5 @@
 //imports
 const mongoose = require('mongoose');
-//const Comment = require('./comments');
 
 //schemas
 const ingredientSchema = new mongoose.Schema({
@@ -34,10 +33,6 @@ const recipesSchema = new mongoose.Schema({
         type: [likeSchema],
         default: []
     },
-    // comments: {
-    //     type: [Comment],
-    //     default: []
-    // },
     isFlagged: Boolean
 })
 
