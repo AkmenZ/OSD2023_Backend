@@ -21,7 +21,7 @@ app.use(cors());
 app.options('*', cors());
 
 var corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: 'https://osd2023frontend.up.railway.app',
     optionsSuccessStatus: 200
 }
 
